@@ -9,6 +9,7 @@ class LogCountEntry:
     def __init__(self):
         self.size = 0L
         self.row = 0
+        self.avg_size = 0
 
 
 if __name__ == '__main__':
@@ -39,12 +40,13 @@ if __name__ == '__main__':
 
     old = time.clock()
     print "sort开始"
-    sorted_count = sorted(count.items(), key=lambda x: x[1].size, reverse=True)
+    sorted_count = sorted(count.items(), key=lambda x: int(x[1].size / x[1].row), reverse=True)
     print 'sort结束，耗时(%s)' % (time.clock() - old)
 
     print "开始输出统计结果"
     output_file = open(output_file_name, 'w+')
     for key, value in sorted_count:
-        print >> output_file, '{key}: {size}字节, {row}行'.format(key=key, size=value.size, row=value.row)
+        print >> output_file, '{key}: {size}字节, {row}行, {avg}' \
+            .format(key=key, size=value.size, row=value.row, avg=int(value.size / value.row))
     output_file.close()
     print "结束输出统计结果"
