@@ -38,15 +38,18 @@ if __name__ == '__main__':
     print 'count结束，耗时%s' % (time.clock() - old)
     input_file.close()
 
+    for key, value in count:
+        value.avg_size = int(value.size / value.row)
+
     old = time.clock()
     print "sort开始"
-    sorted_count = sorted(count.items(), key=lambda x: int(x[1].size / x[1].row), reverse=True)
+    sorted_count = sorted(count.items(), key=lambda x: x[1].avg_size, reverse=True)
     print 'sort结束，耗时(%s)' % (time.clock() - old)
 
     print "开始输出统计结果"
     output_file = open(output_file_name, 'w+')
     for key, value in sorted_count:
         print >> output_file, '{key}: {size}字节, {row}行, {avg}' \
-            .format(key=key, size=value.size, row=value.row, avg=int(value.size / value.row))
+            .format(key=key, size=value.size, row=value.row, avg=value.avg_size)
     output_file.close()
     print "结束输出统计结果"
